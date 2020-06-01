@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang | default: "en" }}">
+
+  <head>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+     integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+     crossorigin=""/>
+    <style type="text/css">
+      html { height: 100%; }
+      body {
+        font-family: sans;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        display: grid;
+        grid-template-columns: 20% 1fr;
+        justify-content: stretch;
+      }
+      #sidebar { margin: 0.5em; }
+      .wrapper { height: 100% }
+      #mainmap { height: 100% }
+    </style>
+
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+     integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+     crossorigin=""></script>
+    <!-- Load the isochrone GeoJSON.
+         This should get moved to an AJAX call to pull the raw JSON in long-term -->
+    <script src="tmpiso.js"></script>
+  </head>
+
+  <body>
+
+    <div id="sidebar">
+      {%- include sidebar.html -%}
+    </div>
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        {{ content }}
+      </div>
+    </main>
+
+  </body>
+
+</html>
