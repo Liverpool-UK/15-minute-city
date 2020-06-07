@@ -34,8 +34,6 @@ layout: default
           xhr.area_idx = i;
           xhr.onload = function(e) {
             if (this.status == 200) {
-              console.log('response', this.response); // JSON response  
-              console.log(this.area_idx);
               areas[this.area_idx].isochrone = this.response;
               // Add it to the map
               L.geoJSON(areas[this.area_idx].isochrone, { style: walkingStyle }).addTo(mainMap);
