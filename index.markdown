@@ -7,7 +7,13 @@ layout: default
   <div id="mainmap">
   </div>
   <script>
+    var walkingStyle = {
+      "color": "#ff7800",
+      "weight": 1.5,
+      "opacity": 0.75
+    };
     var mainMap;
+    var areas = {% data_to_json areas %};
     window.onload = function() {
       mainMap = L.map('mainmap').setView([53.4105095,-2.9704659], 12)
       //mainMap = L.map('mainmap').setView([51.505, -0.09], 13);
@@ -19,8 +25,24 @@ layout: default
         maxZoom: 18,
         }).addTo(mainMap);
       // Load the isochrones
-      var isochrone = JSON.parse(iso);
-      console.log(isochrone);
-      L.geoJSON(isochrone).addTo(mainMap);
+      for (var i =0; i < areas.length; i++) {
+        console.log(areas[i].name + " "+areas[i].url);
+        if (areas[i].url) {
+          const xhr = new XMLHttpRequest();
+          xhr.open('GET', areas[i].url);
+          xhr.responseType = 'json';
+          xhr.area_idx = i;
+          xhr.onload = function(e) {
+            if (this.status == 200) {
+              console.log('response', this.response); // JSON response  
+              console.log(this.area_idx);
+              areas[this.area_idx].isochrone = this.response;
+              // Add it to the map
+              L.geoJSON(areas[this.area_idx].isochrone, { style: walkingStyle }).addTo(mainMap);
+            }
+          };
+          xhr.send();
+        }
+      }
     }
   </script>

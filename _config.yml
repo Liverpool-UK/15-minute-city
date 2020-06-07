@@ -29,6 +29,8 @@ url: "" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: amcewen
 github_username:  Liverpool-UK
 
+isochrone_dataset: areas
+
 # Build settings
 #theme: minima
 plugins:
