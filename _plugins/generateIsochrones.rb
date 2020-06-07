@@ -13,11 +13,16 @@ module Jekyll
           else
             area = site.data[site.config['isochrone_dataset']][sf]
             puts area['name']
-            isourl = "http://trips.mcqn.com:8080/otp/routers/default/isochrone?fromPlace=#{area['lat']},#{area['lon']}&mode=WALK&cutoffSec=300&cutoffSec=600&cutoffSec=900"
-            isochrone = URI.open(isourl).read
-            isofile = IsochroneFile.new(site, site.source, "isochrones", site.data[site.config['isochrone_dataset']][sf]['name'], isochrone)
-            site.data[site.config['isochrone_dataset']][sf]['url'] = isofile.url
-            site.static_files << isofile
+            ["WALK", "BICYCLE"].each do |transport|
+              #isourl = "http://trips.mcqn.com:8080/otp/routers/default/isochrone?fromPlace=#{area['lat']},#{area['lon']}&mode=#{transport}&cutoffSec=300&cutoffSec=600&cutoffSec=900"
+              isourl = "http://trips.mcqn.com:8080/otp/routers/default/isochrone?fromPlace=#{area['lat']},#{area['lon']}&mode=#{transport}&cutoffSec=900"
+              # Adding wheelchair=yes and walkSpeed=SOMETHING m/s to this will give a reduced mobility option (WALK defaults to a walkSpeed that's ~3mph)
+              #isourl = "http://trips.mcqn.com:8080/otp/routers/default/isochrone?fromPlace=#{area['lat']},#{area['lon']}&mode=#{transport}&cutoffSec=300&cutoffSec=600&cutoffSec=900"
+              isochrone = URI.open(isourl).read
+              isofile = IsochroneFile.new(site, site.source, "isochrones", "#{site.data[site.config['isochrone_dataset']][sf]['name']}-#{transport.downcase}", isochrone)
+              site.data[site.config['isochrone_dataset']][sf]["#{transport.downcase}url"] = isofile.url
+              site.static_files << isofile
+            end
           end
         end
       else

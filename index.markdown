@@ -8,9 +8,15 @@ layout: default
   </div>
   <script>
     var walkingStyle = {
-      "color": "#ff7800",
+      //"color": "#ff7800",
+      "color": "#cc5e3f",
       "weight": 1.5,
-      "opacity": 0.75
+      "opacity": 0.85
+    };
+    var bikingStyle = {
+      "color": "#3fadcc",
+      "weight": 1.5,
+      "opacity": 0.65
     };
     var mainMap;
     var areas = {% data_to_json areas %};
@@ -25,22 +31,30 @@ layout: default
         maxZoom: 18,
         }).addTo(mainMap);
       // Load the isochrones
-      for (var i =0; i < areas.length; i++) {
-        console.log(areas[i].name + " "+areas[i].url);
-        if (areas[i].url) {
-          const xhr = new XMLHttpRequest();
-          xhr.open('GET', areas[i].url);
-          xhr.responseType = 'json';
-          xhr.area_idx = i;
-          xhr.onload = function(e) {
-            if (this.status == 200) {
-              areas[this.area_idx].isochrone = this.response;
-              // Add it to the map
-              L.geoJSON(areas[this.area_idx].isochrone, { style: walkingStyle }).addTo(mainMap);
-            }
-          };
-          xhr.send();
+      //var travelTypes = ["walk", "bike", "reduced"];
+      var travelTypes = [
+        { "prefix": "bicycle", "style": bikingStyle },
+        { "prefix": "walk", "style": walkingStyle }
+      ];
+      travelTypes.forEach(function(tt) {
+        for (var i =0; i < areas.length; i++) {
+          console.log(areas[i].name + " "+areas[i][tt.prefix+"url"]);
+          if (areas[i][tt.prefix+"url"]) {
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', areas[i][tt.prefix+"url"]);
+            xhr.responseType = 'json';
+            xhr.area_idx = i;
+            xhr.tt = tt;
+            xhr.onload = function(e) {
+              if (this.status == 200) {
+                areas[this.area_idx][this.tt.prefix+"isochrone"] = this.response;
+                // Add it to the map
+                L.geoJSON(areas[this.area_idx][this.tt.prefix+"isochrone"], { style: this.tt.style }).addTo(mainMap);
+              }
+            };
+            xhr.send();
+          }
         }
-      }
+      });
     }
   </script>
