@@ -19,8 +19,6 @@ module Jekyll
               { 'prefix': 'walk', 'mode': 'WALK', 'extraParams': '' },
               { 'prefix': 'bicycle', 'mode': 'BICYCLE', 'extraParams': '' }
             ].each do |transport|
-puts transport
-puts transport[:prefix]
               #isourl = "http://trips.mcqn.com:8080/otp/routers/default/isochrone?fromPlace=#{area['lat']},#{area['lon']}&mode=#{transport}&cutoffSec=300&cutoffSec=600&cutoffSec=900"
               isourl = "http://trips.mcqn.com:8080/otp/routers/default/isochrone?fromPlace=#{area['lat']},#{area['lon']}&mode=#{transport[:mode]}&cutoffSec=900#{transport[:extraParams]}"
               isochrone = URI.open(isourl).read
