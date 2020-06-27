@@ -14,10 +14,41 @@ layout: default
     <li style="color: #cc5e3f">Area within 15 minutes' walk</li>
     <li style="color: #3fadcc">Area within 15 minutes' cycling</li>
   </ul>
+  <h3>Areas</h3>
+  <table id="area-grid">
+    <tr>
+      <th>Area</th><th>Reduced Mobility</th><th>Walking</th><th>Cycling</th>
+    </tr>
+  {% for area in site.data.areas %}
+    <tr>
+      <td>{{ area.name }}</td>
+      <td class="toggle reduced">
+      {% if area.reducedurl %}
+        <input onchange="toggleIsochrone(event.target, {{ forloop.index0 }}, 'reduced')" type="checkbox" checked="true" name="{{ area.name }}-reduced" id="check-{{ area.name }}-reduced"/>
+      {% endif %}
+      </td>
+      <td class="toggle walk">
+      {% if area.walkurl %}
+        <input onchange="toggleIsochrone(event.target, {{ forloop.index0 }}, 'walk')" type="checkbox" checked="true" name="{{ area.name }}-walk" id="check-{{ area.name }}-walk"/>
+      {% endif %}
+      </td>
+      <td class="toggle bicycle">
+      {% if area.bicycleurl %}
+        <input onchange="toggleIsochrone(event.target, {{ forloop.index0 }}, 'bicycle')" type="checkbox" checked="true" name="{{ area.name }}-bicycle" id="check-{{ area.name }}-bicycle"/>
+      {% endif %}
+      </td>
+    </tr>
+  {% endfor %}
+  </table>
 </div>
 <div id="mainmap">
 </div>
 <script>
+  var hiddenStyle = {
+    "color": "#00000000",
+    "weight": 0,
+    "opacity": 0
+  };
   var reducedStyle = {
     "color": "#5ecc3f",
     "weight": 1.5,
@@ -34,12 +65,27 @@ layout: default
     "weight": 1.5,
     "opacity": 0.65
   };
+  var travelTypes = ["walk", "bicycle", "reduced"];
+  var travelTypeStyles = {
+    "bicycle": bikingStyle,
+    "walk": walkingStyle,
+    "reduced": reducedStyle
+  };
   var mainMap;
   var areas = {% data_to_json areas %};
 
+  function toggleIsochrone(ev, idx, tt) {
+    if (ev.checked) {
+      // Turn it on
+      areas[idx][tt+'layer'].setStyle(travelTypeStyles[tt]);
+    } else {
+      // Hide the layer
+      areas[idx][tt+'layer'].setStyle(hiddenStyle);
+    }
+    return false;
+  }
   window.onload = function() {
     mainMap = L.map('mainmap').setView([53.4105095,-2.9704659], 12)
-    //mainMap = L.map('mainmap').setView([51.505, -0.09], 13);
     var mapLink = '<a href="http://openstreetmap.org">OpenStreetMap</a>';
     var ocmlink = '<a href="http://thunderforest.com/">Thunderforest</a>';
     L.tileLayer(
@@ -48,26 +94,19 @@ layout: default
       maxZoom: 18,
       }).addTo(mainMap);
     // Load the isochrones
-    //var travelTypes = ["walk", "bike", "reduced"];
-    var travelTypes = [
-      { "prefix": "bicycle", "style": bikingStyle },
-      { "prefix": "walk", "style": walkingStyle },
-      { "prefix": "reduced", "style": reducedStyle }
-    ];
     travelTypes.forEach(function(tt) {
       for (var i =0; i < areas.length; i++) {
-        console.log(areas[i].name + " "+areas[i][tt.prefix+"url"]);
-        if (areas[i][tt.prefix+"url"]) {
+        if (areas[i][tt+"url"]) {
           const xhr = new XMLHttpRequest();
-          xhr.open('GET', areas[i][tt.prefix+"url"]);
+          xhr.open('GET', areas[i][tt+"url"]);
           xhr.responseType = 'json';
           xhr.area_idx = i;
           xhr.tt = tt;
           xhr.onload = function(e) {
             if (this.status == 200) {
-              areas[this.area_idx][this.tt.prefix+"isochrone"] = this.response;
+              areas[this.area_idx][this.tt+"isochrone"] = this.response;
               // Add it to the map
-              L.geoJSON(areas[this.area_idx][this.tt.prefix+"isochrone"], { style: this.tt.style }).addTo(mainMap);
+              areas[this.area_idx][this.tt+"layer"] = L.geoJSON(areas[this.area_idx][this.tt+"isochrone"], { style: travelTypeStyles[this.tt] }).addTo(mainMap);
             }
           };
           xhr.send();
