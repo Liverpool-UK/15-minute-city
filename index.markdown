@@ -6,7 +6,7 @@ layout: default
 ---
 <div id="sidebar">
   <h1>Could Liverpool be a 15 Minute City?</h1>
-  <p>A website to explore a Liverpool where your everyday needs are within a 15 minute walk or cycle.</p>
+  <p>A website to explore a Liverpool where your <em>everyday</em> needs are within a 15 minute walk or cycle.</p>
   <p><strong>This site is a work-in-progress</strong>.  See <a href="https://github.com/Liverpool-UK/somebody-should/issues/35">this discussion</a> or talk to <a href="https://twitter.com/amcewen">Adrian McEwen</a> to find out more.</p>
   <h3>Key</h3>
   <ul>
