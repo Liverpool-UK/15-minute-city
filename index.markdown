@@ -15,6 +15,7 @@ layout: default
     <li style="color: #3fadcc">Area within 15 minutes' cycling</li>
   </ul>
   <h3>Areas</h3>
+  <p>Turn isochrones on/off by clicking on the area name, type of isochrones, or individual checkboxes.</p>
   <table id="area-grid">
     <tr>
       <th>Area</th>
