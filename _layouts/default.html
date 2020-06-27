@@ -12,12 +12,15 @@
         margin: 0;
         padding: 0;
         height: 100%;
+      }
+      .wrapper {
         display: grid;
         grid-template-columns: 20% 1fr;
         justify-content: stretch;
+        height: 100%;
       }
       #sidebar { margin: 0.5em; }
-      .wrapper { height: 100% }
+      .page-content { height: 100% }
       #mainmap { height: 100% }
     </style>
 
@@ -29,9 +32,6 @@
 
   <body>
 
-    <div id="sidebar">
-      {%- include sidebar.html -%}
-    </div>
     <main class="page-content" aria-label="Content">
       <div class="wrapper">
         {{ content }}
