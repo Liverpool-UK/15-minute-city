@@ -27,19 +27,19 @@ layout: default
       <td class="toggle-target" onclick="toggleClass('{{ area.name }}')">{{ area.name }}</td>
       {% if area.reducedurl %}
       <td class="toggle reduced">
-        <input onchange="updateIsochroneVisibility()" type="checkbox" checked="true" name="{{ area.name }}-reduced" id="check-{{ area.name }}-reduced" class="check-reduced check-{{ area.name }}" />
+        <input onchange="updateIsochroneVisibility()" type="checkbox" checked name="{{ area.name }}-reduced" id="check-{{ area.name }}-reduced" class="check-reduced check-{{ area.name }}" />
       {% else %}
       <td colspan="3" class="data-missing">data missing. <a href="https://github.com/Liverpool-UK/15-minute-city/issues/4">Want to help?</a>
       {% endif %}
       </td>
       <td class="toggle walk">
       {% if area.walkurl %}
-        <input onchange="updateIsochroneVisibility()" type="checkbox" checked="true" name="{{ area.name }}-walk" id="check-{{ area.name }}-walk" class="check-walk check-{{ area.name }}" />
+        <input onchange="updateIsochroneVisibility()" type="checkbox" checked name="{{ area.name }}-walk" id="check-{{ area.name }}-walk" class="check-walk check-{{ area.name }}" />
       {% endif %}
       </td>
       <td class="toggle bicycle">
       {% if area.bicycleurl %}
-        <input onchange="updateIsochroneVisibility()" type="checkbox" checked="true" name="{{ area.name }}-bicycle" id="check-{{ area.name }}-bicycle" class="check-bicycle check-{{ area.name }}" />
+        <input onchange="updateIsochroneVisibility()" type="checkbox" name="{{ area.name }}-bicycle" id="check-{{ area.name }}-bicycle" class="check-bicycle check-{{ area.name }}" />
       {% endif %}
       </td>
     </tr>
