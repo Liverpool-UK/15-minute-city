@@ -17,24 +17,29 @@ layout: default
   <h3>Areas</h3>
   <table id="area-grid">
     <tr>
-      <th>Area</th><th>Reduced Mobility</th><th>Walking</th><th>Cycling</th>
+      <th>Area</th>
+      <th class="toggle-target" onclick="toggleClass('reduced')">Reduced Mobility</th>
+      <th class="toggle-target" onclick="toggleClass('walk')">Walking</th>
+      <th class="toggle-target" onclick="toggleClass('bicycle')">Cycling</th>
     </tr>
   {% for area in site.data.areas %}
     <tr>
-      <td>{{ area.name }}</td>
-      <td class="toggle reduced">
+      <td class="toggle-target" onclick="toggleClass('{{ area.name }}')">{{ area.name }}</td>
       {% if area.reducedurl %}
-        <input onchange="toggleIsochrone(event.target, {{ forloop.index0 }}, 'reduced')" type="checkbox" checked="true" name="{{ area.name }}-reduced" id="check-{{ area.name }}-reduced"/>
+      <td class="toggle reduced">
+        <input onchange="updateIsochroneVisibility()" type="checkbox" checked="true" name="{{ area.name }}-reduced" id="check-{{ area.name }}-reduced" class="check-reduced check-{{ area.name }}" />
+      {% else %}
+      <td colspan="3" class="data-missing">data missing. <a href="https://github.com/Liverpool-UK/15-minute-city/issues/4">Want to help?</a>
       {% endif %}
       </td>
       <td class="toggle walk">
       {% if area.walkurl %}
-        <input onchange="toggleIsochrone(event.target, {{ forloop.index0 }}, 'walk')" type="checkbox" checked="true" name="{{ area.name }}-walk" id="check-{{ area.name }}-walk"/>
+        <input onchange="updateIsochroneVisibility()" type="checkbox" checked="true" name="{{ area.name }}-walk" id="check-{{ area.name }}-walk" class="check-walk check-{{ area.name }}" />
       {% endif %}
       </td>
       <td class="toggle bicycle">
       {% if area.bicycleurl %}
-        <input onchange="toggleIsochrone(event.target, {{ forloop.index0 }}, 'bicycle')" type="checkbox" checked="true" name="{{ area.name }}-bicycle" id="check-{{ area.name }}-bicycle"/>
+        <input onchange="updateIsochroneVisibility()" type="checkbox" checked="true" name="{{ area.name }}-bicycle" id="check-{{ area.name }}-bicycle" class="check-bicycle check-{{ area.name }}" />
       {% endif %}
       </td>
     </tr>
@@ -74,15 +79,35 @@ layout: default
   var mainMap;
   var areas = {% data_to_json areas %};
 
-  function toggleIsochrone(ev, idx, tt) {
-    if (ev.checked) {
-      // Turn it on
-      areas[idx][tt+'layer'].setStyle(travelTypeStyles[tt]);
-    } else {
-      // Hide the layer
-      areas[idx][tt+'layer'].setStyle(hiddenStyle);
+  // Read the state of the checkboxes and set the isocrhone visibility accordingly
+  function updateIsochroneVisibility() {
+    areas.forEach(function(a) {
+      setIsochroneVisibility(a.reducedlayer, a.name, 'reduced');
+      setIsochroneVisibility(a.walklayer, a.name, 'walk');
+      setIsochroneVisibility(a.bicyclelayer, a.name, 'bicycle');
+    });
+  }
+  // Show/hide the given isochrone based on its checkbox state
+  function setIsochroneVisibility(layer, area, tt) {
+    if (layer) {
+      var checkbox = document.getElementById('check-'+area+'-'+tt);
+      if (checkbox.checked) {
+        // Turn it on
+        layer.setStyle(travelTypeStyles[tt]);
+      } else {
+        // Hide the layer
+        layer.setStyle(hiddenStyle);
+      }
     }
-    return false;
+  }
+  function toggleClass(tt) {
+    var checkboxes = document.getElementsByClassName('check-'+tt);
+    // Toggle based on whatever state the first one has
+    var newState = !checkboxes[0].checked;
+    for (var i =0; i < checkboxes.length; i++) {
+      checkboxes[i].checked = newState;
+    }
+    updateIsochroneVisibility();
   }
   window.onload = function() {
     mainMap = L.map('mainmap').setView([53.4105095,-2.9704659], 12)
@@ -107,6 +132,8 @@ layout: default
               areas[this.area_idx][this.tt+"isochrone"] = this.response;
               // Add it to the map
               areas[this.area_idx][this.tt+"layer"] = L.geoJSON(areas[this.area_idx][this.tt+"isochrone"], { style: travelTypeStyles[this.tt] }).addTo(mainMap);
+              // FIXME Ideally we'd wait for all of these to load then call this once...
+              updateIsochroneVisibility();
             }
           };
           xhr.send();
