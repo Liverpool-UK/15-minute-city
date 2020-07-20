@@ -155,7 +155,7 @@ layout: default
     updateIsochroneVisibility();
   }
   window.onload = function() {
-    mainMap = L.map('mainmap').setView([53.4105095,-2.9704659], 12)
+    mainMap = L.map('mainmap').setView([53.4105095,-2.9704659], 13)
     var mapLink = '<a href="http://openstreetmap.org">OpenStreetMap</a>';
     var ocmlink = '<a href="http://thunderforest.com/">Thunderforest</a>';
     L.tileLayer(
