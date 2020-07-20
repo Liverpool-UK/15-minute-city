@@ -1,0 +1,27 @@
+[
+    { 
+      "name": "existing", 
+      "url": "cycleways/cycleways.geojson",
+      "description": "Existing cycleway provision"
+    },
+    { 
+      "name": "new", 
+      "url": "cycleways/top_routes.geojson",
+      "description": "Roads with high 'new cycling potential'"
+    },
+    { 
+      "name": "cohesive", 
+      "url": "cycleways/cohesive_network.geojson",
+      "description": "How a cohesive cycle network could look"
+    },
+    { 
+      "name": "spare", 
+      "url": "cycleways/spare_lanes.geojson",
+      "description": "Roads with potential 'spare' lanes"
+    },
+    { 
+      "name": "wide", 
+      "url": "cycleways/wide_lanes.geojson",
+      "description": "Roads with lanes estimated >10m wide"
+    }
+  ]
