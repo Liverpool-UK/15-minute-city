@@ -47,7 +47,7 @@ layout: default
   {% endfor %}
   </table>
   <h3 id="cycleways">New Cycle Routes?</h3>
-  <p>In response to the COVID-19 crisis, <a href="https://twitter.com/robinlovelace/status/1285330291188469760">Robin Lovelace et al</a> have been <a href="https://www.cyipt.bike/rapid/">working out where we could easily add new cycle routes</a>.</p>
+  <p>In response to the COVID-19 crisis, <a href="https://twitter.com/robinlovelace/status/1285330291188469760">Dr Robin Lovelace et al</a> have been <a href="https://www.cyipt.bike/rapid/">working out where we could easily add new cycle routes</a>.</p>
   <p>These options show the results of his analysis on the map:</p>
   <table id="new-cycleways-grid">
   {% for cycleway in site.data.cycleways %}
