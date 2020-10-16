@@ -42,11 +42,18 @@ If you just want to get a static local version of the website on your network at
 The website should now be served locally at [http://localhost:4000](localhost:4000) or at [http://127.0.0.1:4000](http://127.0.0.1:4000)
 
 
-### Using Your Own Data
+### Using Your Own Map Background Tiles
 
 If you want to make it pull in your own data you'll need to get a different instance of [cyclOSM](https://github.com/cyclosm/cyclosm-cartocss-style/blob/master/docs/INSTALL.md) going as a starting point (partly because it's bike-focused, partly because it's documented...).
 
 Refer to [issue #13](https://github.com/Liverpool-UK/15-minute-city/issues/13) for now.
 
+### Making a Version For Your City
+
+This site is focused on Liverpool, but it should be fairly easy to spin up a version for somewhere else.  You'd need to do something like:
+
+ 1. Spin up an instance of OpenTripPlanner covering your area.  As a starting point [these are the steps we followed in creating the Liverpool version](https://github.com/Liverpool-UK/somebody-should/issues/34#issuecomment-626343797)
+ 1. Fork this repository, and point it at the OpenTripPlanner instance you set up in the previous step
+ 1. Update the `_data/areas.json` file to contain the neighbourhoods/districts/whatever for your area.  Finding the data to put into that doesn't require any coding ability, [this is how we worked through that for Liverpool](https://github.com/Liverpool-UK/15-minute-city/issues/4)
 
 
